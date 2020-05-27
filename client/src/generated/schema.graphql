@@ -1,5 +1,5 @@
 # source: http://3.34.131.20:8080/graphql
-# timestamp: Sun May 24 2020 13:13:36 GMT+0900 (대한민국 표준시)
+# timestamp: Wed May 27 2020 00:03:22 GMT+0900 (GMT+09:00)
 
 """This directive allows results to be deferred during execution"""
 directive @defer on FIELD
@@ -8,6 +8,24 @@ input CreateDetailDealInput {
   postId: Int!
   userId: Int!
   hashtagId: Int!
+}
+
+input CreateFileInput {
+  productId: Int!
+  imgPath: String!
+}
+
+input CreateHashtagInput {
+  productId: Int!
+  hashtag: String!
+}
+
+input CreatePostInput {
+  uploaderId: Int!
+  title: String!
+  saleDate: String!
+  contents: String!
+  deal: String!
 }
 
 input CreateProductInput {
@@ -28,8 +46,9 @@ type DetailDeal {
 }
 
 type DetailDealOutput {
+  dealId: ID!
   postId: Int!
-  imgPath: String!
+  imgPaths: [FileArr]
   title: String!
   category: String!
   hashtag: String!
@@ -40,10 +59,39 @@ type DetailDealOutput {
   address: String!
 }
 
+type File {
+  fileId: ID!
+  product: Product!
+  imgPath: String!
+}
+
+type FileArr {
+  imgPath: String!
+}
+
+type FileOutput {
+  fileId: Int!
+  productId: Int!
+  imgPath: String!
+}
+
 type Hashtag {
   hashtagId: ID!
   product: Product!
   hashtag: String!
+}
+
+type HashtagOutput {
+  hashtagId: ID!
+  productId: Int!
+  hashtag: String!
+}
+
+type HistoryOutput {
+  userId: Int
+  postId: Int
+  createdDate: String
+  modifiedDate: String
 }
 
 input LoginUserInput {
@@ -56,27 +104,61 @@ type LoginUserOutput {
 }
 
 type Mutation {
-  createProduct(input: CreateProductInput!): Product
+  updateProduct(input: UpdateProductInput!): ProductOutput
+  createProduct(input: CreateProductInput!): ProductOutput
+  deleteProduct(id: Int!): Int!
+  createFile(input: CreateFileInput!): FileOutput
+  updateFile(input: UpdateFileInput!): FileOutput
+  deleteFile(id: Int!): Int!
   createDetailDeal(input: CreateDetailDealInput!): DetailDealOutput
+  deleteDetailDeal(id: Int!): Int!
   loginUser(input: LoginUserInput!): LoginUserOutput
+  updateUser(input: UpdateUserInput!): UserOutput
+  deleteUser(id: Int!): Int
+  createHashtag(input: CreateHashtagInput!): HashtagOutput
+  updateHashtag(input: UpdateHashtagInput!): HashtagOutput
+  deleteHashtag(id: Int!): Int
+  createPost(input: CreatePostInput!): PostOutput
+  updatePost(input: UpdatePostInput!): PostOutput
+  deletePost(id: Int!): Int!
+  createHistory(postId: Int!): HistoryOutput
 }
 
 type Post {
   postId: ID!
-  user: User
+  userId: Int
   isBuy: Boolean!
   title: String!
   saleDate: String!
   contents: String!
-  viewCount: Int!
+  viewCount: Int
   deal: String!
   createdDate: String
   modifiedDate: String
 }
 
+type PostOutput {
+  postId: ID!
+  userId: Int!
+  isBuy: Boolean!
+  title: String!
+  contents: String!
+  viewCount: Int!
+  deal: String!
+}
+
 type Product {
   productId: ID!
-  post: Post
+  post: Post!
+  name: String!
+  price: Int!
+  category: String!
+  state: Boolean
+}
+
+type ProductOutput {
+  productId: ID!
+  postId: Int!
   name: String!
   price: Int!
   category: String!
@@ -85,12 +167,66 @@ type Product {
 
 type Query {
   findAllPosts: [Post]
+  findAllPost: [PostOutput]
+  findPostByPostId(id: Int): PostOutput
+
+  """
+  findAllPostsByUploaderId(uploader_id: Int):[Post]
   findPostByPostId(id: Int): Post
+  """
+  findRecentPosts: [Post]
+  findAllFile: [FileOutput]
+  findAllFiles: [File]
+  findFileById(id: Int): FileOutput
   findAllDetailDeals: [DetailDeal]
-  findDetailDealByPost(postId: Int): [DetailDealOutput]
+  findAllDetailDeal: [DetailDealOutput]
+
+  """findDetailDealByPosts(postId: Int): [DetailDealOutput]"""
+  findDetailDealByPost(postId: Int): DetailDealOutput
   findAllUsers: [User]
+  findAllUser: [UserOutput]
+  findUserInfo: UserInfoOutput
+  findAllHashtags: [Hashtag]
+  findAllHashtag: [HashtagOutput]
+  findByHashtagId(id: Int): HashtagOutput
+  findAllProduct: [ProductOutput]
   findAllProducts: [Product]
-  findProductById(productId: Int): Product
+  findByProductId(id: Int): ProductOutput
+  findUserHistoryByUserId: [Post]
+}
+
+input UpdateFileInput {
+  fileId: Int!
+  imgPath: String!
+}
+
+input UpdateHashtagInput {
+  hashtagId: Int!
+  hashtag: String!
+}
+
+input UpdatePostInput {
+  postId: Int!
+  title: String!
+  contents: String!
+  deal: String!
+}
+
+input UpdateProductInput {
+  productId: ID!
+  postId: Int!
+  price: Int!
+  name: String!
+  category: String!
+  state: Boolean!
+}
+
+input UpdateUserInput {
+  userId: ID!
+  imageUrl: String
+  phone: String!
+  address: String!
+  trust: Int!
 }
 
 type User {
@@ -98,6 +234,25 @@ type User {
   name: String!
   email: String
   imageUrl: String!
+  provider: String!
+  providerId: Int!
+  phone: String!
+  address: String!
+  trust: Int!
+}
+
+type UserInfoOutput {
+  name: String
+  address: String
+  trust: Int
+  numOfPosts: Int
+}
+
+type UserOutput {
+  userId: ID!
+  name: String!
+  email: String
+  imageUrl: String
   provider: String!
   providerId: Int!
   phone: String!

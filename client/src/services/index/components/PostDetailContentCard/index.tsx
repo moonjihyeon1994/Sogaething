@@ -2,24 +2,23 @@ import * as React from 'react';
 import styled from '~/styled';
 
 import useStores from '../../helpers/useStores';
+import { IPost } from '../../pages/post/[pid]/index';
 
 export interface IPostDetailContentCardProps {
+  data: IPost,
+  loading: boolean,
 }
 
 export default function PostDetailContentCard(props: IPostDetailContentCardProps) {
   const store = useStores();
-
+  const { data, loading } = props;
   return (
     <Wrapper>
-      {/* <Title>{store.postStore.post?.title}</Title> */}
-      {/* <HashTag>{store.postStore.post?.hashtag}</HashTag> */}
-      <Category>디지털/가전 </Category>
+      <Title>{data.title}</Title>
+      <HashTag>{data.hashtag}</HashTag>
+      <Category>{data.category}</Category>
       <Content>
-        상태 좋아요 !<br />
-올해 구매했고 배터리사이클은 음 신경안쓰고 사용해서 <br />
-60정도 됐습니다 ~~~<br />
-직거래는 수원역 아니면 수원대학교에서 할께요 !<br />
-연락은 소개톡으로 주세여<br />
+        {data.contents}
       </Content>
     </Wrapper>
   );

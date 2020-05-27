@@ -5,14 +5,16 @@ import PostDetailContentCard from '../PostDetailContentCard';
 import PostDetailUserCard from '../PostDetailUserCard';
 
 export interface IPostDetailProps {
-
+    data: any,
+    loading: boolean,
 }
 
 export default (props: IPostDetailProps) => {
+    const { data, loading } = props;
     return (
         <Wrapper>
             <PostDetailUserCard />
-            <PostDetailContentCard />
+            <PostDetailContentCard data={data} loading={loading} />
         </Wrapper>
     );
 }
