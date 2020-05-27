@@ -10,8 +10,6 @@ export type Scalars = {
 
 export type ICreateDetailDealInput = {
   postId: Scalars["Int"];
-  userId: Scalars["Int"];
-  hashtagId: Scalars["Int"];
 };
 
 export type ICreateFileInput = {
@@ -25,11 +23,16 @@ export type ICreateHashtagInput = {
 };
 
 export type ICreatePostInput = {
-  uploaderId: Scalars["Int"];
   title: Scalars["String"];
-  saleDate: Scalars["String"];
   contents: Scalars["String"];
   deal: Scalars["String"];
+  /** dealLocation:String! */
+  category: Scalars["String"];
+  productname: Scalars["String"];
+  /** productState : String! */
+  price: Scalars["Int"];
+  hashtag: Scalars["String"];
+  imgPaths: Scalars["String"];
 };
 
 export type ICreateProductInput = {
@@ -37,30 +40,28 @@ export type ICreateProductInput = {
   price: Scalars["Int"];
   name: Scalars["String"];
   category: Scalars["String"];
-  state: Scalars["Boolean"];
 };
 
 export type IDetailDeal = {
   dealId: Scalars["ID"];
   post: IPost;
   user: IUser;
-  hashtag: IHashtag;
   createdDate?: Maybe<Scalars["String"]>;
   modifiedDate?: Maybe<Scalars["String"]>;
 };
 
-export type IDetailDealOutput = {
+export type IDetailOutput = {
   dealId: Scalars["ID"];
   postId: Scalars["Int"];
-  imgPaths?: Maybe<Array<Maybe<IFileArr>>>;
+  imgPaths: Array<Maybe<IFile>>;
   title: Scalars["String"];
   category: Scalars["String"];
-  hashtag: Scalars["String"];
+  hashtag: Array<Maybe<IHashtag>>;
   contents: Scalars["String"];
   price: Scalars["Int"];
   buyerId: Scalars["Int"];
   sellerId: Scalars["Int"];
-  address: Scalars["String"];
+  user: IUserInfoResponse;
 };
 
 export type IFile = {
@@ -114,7 +115,7 @@ export type IMutation = {
   createFile?: Maybe<IFileOutput>;
   updateFile?: Maybe<IFileOutput>;
   deleteFile: Scalars["Int"];
-  createDetailDeal?: Maybe<IDetailDealOutput>;
+  createDetailDeal?: Maybe<IDetailOutput>;
   deleteDetailDeal: Scalars["Int"];
   loginUser?: Maybe<ILoginUserOutput>;
   updateUser?: Maybe<IUserOutput>;
@@ -122,6 +123,8 @@ export type IMutation = {
   createHashtag?: Maybe<IHashtagOutput>;
   updateHashtag?: Maybe<IHashtagOutput>;
   deleteHashtag?: Maybe<Scalars["Int"]>;
+  updateViewcount: Scalars["Int"];
+  updateIsBuy: Scalars["Int"];
   createPost?: Maybe<IPostOutput>;
   updatePost?: Maybe<IPostOutput>;
   deletePost: Scalars["Int"];
@@ -184,6 +187,14 @@ export type IMutationDeleteHashtagArgs = {
   id: Scalars["Int"];
 };
 
+export type IMutationUpdateViewcountArgs = {
+  postId: Scalars["Int"];
+};
+
+export type IMutationUpdateIsBuyArgs = {
+  postId: Scalars["Int"];
+};
+
 export type IMutationCreatePostArgs = {
   input: ICreatePostInput;
 };
@@ -193,7 +204,7 @@ export type IMutationUpdatePostArgs = {
 };
 
 export type IMutationDeletePostArgs = {
-  id: Scalars["Int"];
+  postId: Scalars["Int"];
 };
 
 export type IMutationCreateHistoryArgs = {
@@ -209,6 +220,7 @@ export type IPost = {
   contents: Scalars["String"];
   viewCount?: Maybe<Scalars["Int"]>;
   deal: Scalars["String"];
+  dealState: Scalars["String"];
   createdDate?: Maybe<Scalars["String"]>;
   modifiedDate?: Maybe<Scalars["String"]>;
 };
@@ -216,11 +228,17 @@ export type IPost = {
 export type IPostOutput = {
   postId: Scalars["ID"];
   userId: Scalars["Int"];
+  /** 게시자 id */
   isBuy: Scalars["Boolean"];
+  /** 구매 or 판매 */
   title: Scalars["String"];
   contents: Scalars["String"];
-  viewCount: Scalars["Int"];
   deal: Scalars["String"];
+  dealState: Scalars["String"];
+  category: Scalars["String"];
+  name: Scalars["String"];
+  hashtag: Scalars["String"];
+  imgPaths?: Maybe<Array<IFileArr>>;
 };
 
 export type IProduct = {
@@ -229,7 +247,6 @@ export type IProduct = {
   name: Scalars["String"];
   price: Scalars["Int"];
   category: Scalars["String"];
-  state?: Maybe<Scalars["Boolean"]>;
 };
 
 export type IProductOutput = {
@@ -238,7 +255,6 @@ export type IProductOutput = {
   name: Scalars["String"];
   price: Scalars["Int"];
   category: Scalars["String"];
-  state?: Maybe<Scalars["Boolean"]>;
 };
 
 export type IQuery = {
@@ -246,26 +262,26 @@ export type IQuery = {
   findAllPost?: Maybe<Array<Maybe<IPostOutput>>>;
   findPostByPostId?: Maybe<IPostOutput>;
   /** findAllPostsByUploaderId(uploader_id: Int):[Post]
-   * findPostByPostId(id: Int): Post
+   *    findAllPostsByUploaderId(uploader_id: Int):[Post]
+   *    findPostByPostId(id: Int): Post
    */
-  findRecentPosts?: Maybe<Array<Maybe<IPost>>>;
+  findRecentPosts?: Maybe<Array<Maybe<IRecentPostResponse>>>;
   findAllFile?: Maybe<Array<Maybe<IFileOutput>>>;
   findAllFiles?: Maybe<Array<Maybe<IFile>>>;
   findFileById?: Maybe<IFileOutput>;
   findAllDetailDeals?: Maybe<Array<Maybe<IDetailDeal>>>;
-  findAllDetailDeal?: Maybe<Array<Maybe<IDetailDealOutput>>>;
-  /** findDetailDealByPosts(postId: Int): [DetailDealOutput] */
-  findDetailDealByPost?: Maybe<IDetailDealOutput>;
+  findAllDetailDeal?: Maybe<Array<Maybe<IDetailOutput>>>;
+  findDetailDealByPost?: Maybe<IDetailOutput>;
   findAllUsers?: Maybe<Array<Maybe<IUser>>>;
   findAllUser?: Maybe<Array<Maybe<IUserOutput>>>;
-  findUserInfo?: Maybe<IUserInfoOutput>;
+  findUserInfo?: Maybe<IUserInfoResponse>;
   findAllHashtags?: Maybe<Array<Maybe<IHashtag>>>;
   findAllHashtag?: Maybe<Array<Maybe<IHashtagOutput>>>;
   findByHashtagId?: Maybe<IHashtagOutput>;
   findAllProduct?: Maybe<Array<Maybe<IProductOutput>>>;
   findAllProducts?: Maybe<Array<Maybe<IProduct>>>;
   findByProductId?: Maybe<IProductOutput>;
-  findUserHistoryByUserId?: Maybe<Array<Maybe<IPost>>>;
+  findUserHistoryByUserId?: Maybe<Array<Maybe<IUserHistoryResponse>>>;
 };
 
 export type IQueryFindPostByPostIdArgs = {
@@ -288,6 +304,20 @@ export type IQueryFindByProductIdArgs = {
   id?: Maybe<Scalars["Int"]>;
 };
 
+export type IRecentPostResponse = {
+  postId: Scalars["String"];
+  user: IUser;
+  hashTags: Array<Maybe<IHashtag>>;
+  isBuy: Scalars["Boolean"];
+  price: Scalars["Int"];
+  saleDate: Scalars["String"];
+  imgUrls: Array<Maybe<IFile>>;
+  category: Scalars["String"];
+  deal: Scalars["String"];
+  createdDate?: Maybe<Scalars["String"]>;
+  modifiedDate?: Maybe<Scalars["String"]>;
+};
+
 export type IUpdateFileInput = {
   fileId: Scalars["Int"];
   imgPath: Scalars["String"];
@@ -303,6 +333,12 @@ export type IUpdatePostInput = {
   title: Scalars["String"];
   contents: Scalars["String"];
   deal: Scalars["String"];
+  dealState: Scalars["String"];
+  category: Scalars["String"];
+  productname: Scalars["String"];
+  price: Scalars["Int"];
+  hashtag: Scalars["String"];
+  imgPaths: Scalars["String"];
 };
 
 export type IUpdateProductInput = {
@@ -311,11 +347,9 @@ export type IUpdateProductInput = {
   price: Scalars["Int"];
   name: Scalars["String"];
   category: Scalars["String"];
-  state: Scalars["Boolean"];
 };
 
 export type IUpdateUserInput = {
-  userId: Scalars["ID"];
   imageUrl?: Maybe<Scalars["String"]>;
   phone: Scalars["String"];
   address: Scalars["String"];
@@ -334,11 +368,28 @@ export type IUser = {
   trust: Scalars["Int"];
 };
 
-export type IUserInfoOutput = {
+export type IUserHistoryResponse = {
+  user: IUser;
+  postId: Scalars["ID"];
+  isBuy: Scalars["Boolean"];
+  title: Scalars["String"];
+  saleDate: Scalars["String"];
+  contents: Scalars["String"];
+  viewCount?: Maybe<Scalars["Int"]>;
+  deal: Scalars["String"];
+  createdDate?: Maybe<Scalars["String"]>;
+  modifiedDate?: Maybe<Scalars["String"]>;
+  hashTags: Array<Maybe<IHashtag>>;
+  price: Scalars["Int"];
+  imgUrls: Array<Maybe<IFile>>;
+};
+
+export type IUserInfoResponse = {
   name?: Maybe<Scalars["String"]>;
   address?: Maybe<Scalars["String"]>;
   trust?: Maybe<Scalars["Int"]>;
   numOfPosts?: Maybe<Scalars["Int"]>;
+  imgurl?: Maybe<Scalars["String"]>;
 };
 
 export type IUserOutput = {
@@ -368,21 +419,26 @@ export type IGetPostQueryVariables = {
 
 export type IGetPostQuery = { __typename?: "Query" } & {
   findDetailDealByPost: Maybe<
-    { __typename?: "DetailDealOutput" } & Pick<
-      IDetailDealOutput,
+    { __typename?: "DetailOutput" } & Pick<
+      IDetailOutput,
       | "dealId"
       | "postId"
       | "title"
       | "category"
-      | "hashtag"
       | "contents"
       | "price"
       | "buyerId"
       | "sellerId"
-      | "address"
     > & {
-        imgPaths: Maybe<
-          Array<Maybe<{ __typename?: "FileArr" } & Pick<IFileArr, "imgPath">>>
+        imgPaths: Array<
+          Maybe<{ __typename?: "File" } & Pick<IFile, "imgPath">>
+        >;
+        hashtag: Array<
+          Maybe<{ __typename?: "Hashtag" } & Pick<IHashtag, "hashtag">>
+        >;
+        user: { __typename?: "UserInfoResponse" } & Pick<
+          IUserInfoResponse,
+          "name" | "address" | "trust" | "numOfPosts" | "imgurl"
         >;
       }
   >;
@@ -465,12 +521,20 @@ export const GetPostDocument = gql`
       }
       title
       category
-      hashtag
+      hashtag {
+        hashtag
+      }
       contents
       price
       buyerId
       sellerId
-      address
+      user {
+        name
+        address
+        trust
+        numOfPosts
+        imgurl
+      }
     }
   }
 `;

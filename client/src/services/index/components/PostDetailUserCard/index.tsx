@@ -7,22 +7,31 @@ import Pin from '../../assets/img/pin-fill.png?url';
 import Profile from '../../assets/img/Profile.jpg?url';
 
 export interface IPostDetailUserCardProps {
+  user: IUser,
+}
+
+export interface IUser {
+  name: string,
+  address: string | null,
+  trust: number,
+  numOfPosts: number,
 }
 
 export default class PostDetailUserCard extends React.Component<IPostDetailUserCardProps> {
   public render() {
+    const { user } = this.props;
     return (
       <Wrapper>
         <GridImgWrapper>
           <CircleImageView src={Profile} size={2.4} />
         </GridImgWrapper>
         <GridTopLineWrapper>
-          <UserNameTextLine>박지홍</UserNameTextLine>
+          <UserNameTextLine>{user.name}</UserNameTextLine>
           <UserLevelTextLine>lv.1</UserLevelTextLine>
         </GridTopLineWrapper>
         <GridBottomLineWrapper>
           <LocationIcon src={Pin} />
-          <UserLocationTextLine>경기도 화성시 봉담읍 와우리</UserLocationTextLine>
+          <UserLocationTextLine>{user.address}</UserLocationTextLine>
         </GridBottomLineWrapper>
       </Wrapper>
     );

@@ -15,7 +15,11 @@ export default function PostDetailContentCard(props: IPostDetailContentCardProps
   return (
     <Wrapper>
       <Title>{data.title}</Title>
-      <HashTag>{data.hashtag}</HashTag>
+      <HashTag>
+        {data.hashtag
+            .map((tag, index) => (<>#{tag.hashtag} </>)
+            )}
+      </HashTag>
       <Category>{data.category}</Category>
       <Content>
         {data.contents}
@@ -33,7 +37,7 @@ const Wrapper = styled.div`
 `
 
 const Title = styled.div`
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     color: #8f9bb3;
     font-weight: bold;
     font-stretch: normal;

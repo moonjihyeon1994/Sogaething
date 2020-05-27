@@ -7,11 +7,19 @@ query getPost($postId: Int) {
         }
         title
         category
-        hashtag
+        hashtag{
+            hashtag
+        }
         contents
         price
         buyerId
         sellerId
-        address
+        user{
+            name
+            address
+            trust
+            numOfPosts
+            imgurl
+        }
     }
 }

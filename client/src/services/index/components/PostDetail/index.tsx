@@ -13,7 +13,7 @@ export default (props: IPostDetailProps) => {
     const { data, loading } = props;
     return (
         <Wrapper>
-            <PostDetailUserCard />
+            <PostDetailUserCard user={data.user} />
             <PostDetailContentCard data={data} loading={loading} />
         </Wrapper>
     );

@@ -12,15 +12,27 @@ import PostDetailNav from '../../../components/PostDetailNav';
 export interface IPost {
     dealId: string,
     postId: number,
-    imgPaths: IImg[]
+    imgPaths: IImg[],
     title: string,
     category: string,
-    hashtag: string,
+    hashtag: IHashtag[],
     contents: string,
     price: number,
     buyerId: number,
     sellerId: number,
-    address: string,
+    user: IUser,
+}
+
+export interface IUser {
+    name: string,
+    address: string | null,
+    trust: number,
+    numOfPosts: number,
+    imgurl: string,
+}
+
+export interface IHashtag {
+    hashtag: string,
 }
 
 export interface IImg {
@@ -35,7 +47,8 @@ export default function Detail(props: any) {
 
     useEffect(() => {
        if ( data ) {
-           store.postStore.setDeal(data.findDetailDealByPost as IPost);
+        //    store.postStore.setDeal(data.findDetailDealByPost);
+        console.log(data.findDetailDealByPost);
        }
     }, [data])
 
