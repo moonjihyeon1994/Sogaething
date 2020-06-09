@@ -52,6 +52,8 @@
 * [프로젝트 계획서](https://docs.google.com/document/d/17E7PcYOrBnsgTW2I1TAsC5IN_dH2IjCPFka5-g5fVCs/edit#)
 * [와이어프레임 및 기획안](https://scene.zeplin.io/project/5ebe42c1266b3f485e753a12)
 * [소개띵 Wiki](https://lab.ssafy.com/s02-final/s02p31a404/wikis/home)
+* [중고거래 경험 설문지](https://lab.ssafy.com/s02-final/s02p31a404/blob/master/documents/중고거래 경험 설문지 - Google 설문지.pdf)
+* [소개띵 발표자료](https://lab.ssafy.com/s02-final/s02p31a404/blob/master/documents/소개띵_발표자료_최종.pptx)
 
 ### Built With
 사용한 프레임워크
