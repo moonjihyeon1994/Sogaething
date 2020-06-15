@@ -1,11 +1,12 @@
+import { IDepositRequestDto } from './BankService';
 import axios, { AxiosResponse } from 'axios';
 import { NEXT_APP_REST_ENDPOINT } from '../helpers/config';
 import { ENDPOINT } from './../constants';
 
 export interface ChatUserDto {
   userName: string;
-  userId: string | number;
-  imgPath: string;
+  userId: string;
+  imageUrl: string;
 }
 
 export interface ChatRoomListItemDto {
@@ -40,7 +41,7 @@ export interface IChatDto {
   type: string;
   roomId: number;
   sender: string;
-  message: string;
+  message: string | Omit<IDepositRequestDto, 'apiKey'>;
   createdDateTime: string;
 }
 

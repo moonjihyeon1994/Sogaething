@@ -3,7 +3,8 @@ import { Request, Response } from 'express-serve-static-core';
 import jwtDecode from 'jwt-decode';
 import { action, autorun, observable, reaction, toJS } from 'mobx';
 import { checkTokenIsExpired } from '../helpers';
-
+import { setMapInCookie } from '../helpers/cookie';
+import { getCookie } from './../helpers/cookie';
 export interface IAuth {
   sub: string;
   userId: number;
@@ -27,27 +28,34 @@ export interface IToken {
 
 export type Provider = 'kakao' | 'google' | 'naver';
 
+const isServer = typeof window === 'undefined';
+
 @autobind
 class AuthStore {
   @observable token: string = '';
   @observable refreshToken: string = '';
-  @observable auth: IAuth;
+  @observable auth: IAuth = {
+    sub: '',
+    userId: 0,
+    userName: '',
+  };
   @observable email = '';
   @observable provider: string = '';
   @observable imgurl: string = '';
 
-  constructor(root: any, initialData?: AuthStore) {
+  constructor(root: any, initialData?: AuthStore, token?: string) {
     if (initialData) {
       this.auth = initialData!.auth;
       this.token = initialData!.token;
+      this.setToken(initialData!.token);
     } else {
-      this.auth = {
-        sub: '',
-        userId: 0,
-        userName: '',
-      };
-      this.token = '';
-      this.imgurl = '';
+      // this.auth = {
+      //   sub: '',
+      //   userId: 0,
+      //   userName: '',
+      // };
+      // this.token = '';
+      // this.imgurl = '';
     }
   }
 
@@ -96,20 +104,30 @@ class AuthStore {
   }
 
   @action
-  setToken(token: string) {
+  setToken(token: string, res?: Response) {
     this.token = token;
+    // console.log('--------setToken----------------');
+    // console.log(token);
+    // console.log('--------setTokenEnd----------------');
+    if (isServer && res) {
+      // setMapInCookie(res, token)
+      // console.log('--------setToken----------------')
+      // console.log(res);
+      // console.log('--------setTokenEnd----------------')
+    }
     this.setAuth();
   }
   @action
   setAuth() {
     if (this.token) {
       this.auth = jwtDecode(this.token) as IAuth;
+      return;
     }
   }
 
   @action
   getAuth() {
-    if (this.token) {
+    if (this.auth) {
       return this.auth;
     }
   }
@@ -121,7 +139,6 @@ class AuthStore {
 
   @action
   signOut() {
-    window.sessionStorage.removeItem('jwt');
     this.token = '';
     this.auth = {
       sub: 'logout',
@@ -132,12 +149,18 @@ class AuthStore {
   async nextServerInit(req: Request, res: Response) {
     try {
       if (!req || !res) {
-        console.error('req, res 값 없음');
-        throw new Error();
+        console.log('CSR / req, res 값 없음');
+        return;
+        // throw new Error();
       }
+      // console.log('----------------req.headers---------------------');
+      // console.log(req.headers.cookie);
+      // console.log('----------------req.cookies---------------------');
+      // console.log(req.cookies);
       if (!req.headers.cookie) {
-        console.error('쿠키에 토큰 없음');
-        throw new Error();
+        console.log('쿠키에 토큰 없음');
+        return;
+        // throw new Error();
       }
 
       const cookieString: string = req.headers.cookie as string;
@@ -145,12 +168,14 @@ class AuthStore {
       const tokens: IToken = {
         token: '',
       };
-
-      for (const item of cookieString.split('; ')) {
-        const cookie = item.split('=');
-        if (cookie[0] === 'token') {
-          tokens.token = cookie[1];
-        }
+      const token = getCookie('token', req);
+      tokens.token = token ? token : '';
+      // console.log('----------------nextServerInit---------------------');
+      // console.log(tokens.token);
+      // console.log('----------------nextServerInitEnd---------------------');
+      if (tokens.token === '') {
+        console.error('쿠키 헤더에 토큰 없음');
+        throw new Error();
       }
 
       const isRefreshTokenExpired = checkTokenIsExpired(tokens.token);
@@ -165,9 +190,9 @@ class AuthStore {
 
         tokens.token = refreshedTokens.token;
       }
-      this.setToken(tokens.token);
+      this.setToken(tokens.token, res);
     } catch (error) {
-      // console.error(error);
+      console.error(error);
       console.error('error in nextServerInit');
     }
   }

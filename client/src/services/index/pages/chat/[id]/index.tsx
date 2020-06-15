@@ -24,11 +24,22 @@ export default () => {
   const router = useRouter();
   const [me, setMe] = React.useState('');
   const [userId, setUserId] = React.useState('');
+
+  const messageEndRef = React.useRef<HTMLDivElement>(null);
+
   React.useEffect(() => {
     chatStore.getUserChatRoom(router.query.id);
-    setMe(authStore.getAuth()!.userName);
-    setUserId(authStore.getAuth()!.userId + '');
+    if (authStore.getAuth()!.userName) {
+      setMe(authStore.getAuth()!.userName);
+      setUserId(authStore.getAuth()!.userId + '');
+    }
   }, []);
+
+  const scrollToBotton = () => {
+    messageEndRef.current!.scrollTo(messageEndRef.current!.scrollHeight, messageEndRef.current!.scrollHeight);
+  }
+
+  React.useEffect(scrollToBotton, [chatRoomData!.length]);
 
   return (
     <Wrapper>
@@ -43,7 +54,7 @@ export default () => {
           }
         />
       )}
-      <ChatContainer>
+      <ChatContainer ref={messageEndRef}>
         <WrapperChatMessage>
           <ChatMessageBox
             chatRoomData={chatRoomData}
@@ -65,8 +76,10 @@ export default () => {
 
 const Wrapper = styled.div`
   display: grid;
-  grid-auto-rows: 56px minmax(0vh, 85vh) 60px;
-  height: 100%;
+  position: relative;
+  grid-auto-rows: 56px minmax(0vh, 88vh) 65px;
+  height: 100vh;
+  background-color: #fafafa;
   grid-template-areas:
     "CH"
     "CC"
@@ -76,7 +89,15 @@ const Wrapper = styled.div`
 const ChatContainer = styled.div`
   grid-area: CC;
   overflow-y: scroll;
-  background-color: #fafafa;
+  background-color: inherit;
+  /* display: flex;
+  flex-direction: column;
+  justify-content: end; */
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  min-height: 0px;
+  max-height: 100%;
   padding: 3vw;
 `;
 
@@ -84,6 +105,11 @@ const WrapperChatMessage = styled.div`
   display: flex;
   flex-direction: column-reverse;
   justify-content: space-between;
+  -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar{
+    display: none;
+  }
 `;
 
 const ChatInput = styled.div`

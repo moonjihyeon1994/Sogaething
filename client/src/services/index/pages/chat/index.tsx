@@ -22,7 +22,9 @@ export default () => {
   const {chatRooms, loading, getUserChatList} = useChatData();
   const {authStore} = useStores();
   React.useEffect(() => {
-    getUserChatList(authStore.getAuth()!.userId);
+    if (authStore.getAuth()!.userId) {
+      getUserChatList(authStore.getAuth()!.userId);
+    }
   }, [])
 
   const handleOnClick = () => {
@@ -33,18 +35,21 @@ export default () => {
   }
 
   return (
+    <>
     <Wrapper>
       <CategoryHeader type={'chat'} text={'채팅'}/>
       <MarginTopCategoryHeaderContainer>
         <ChatList chatData={chatRooms} loading={loading} />
       </MarginTopCategoryHeaderContainer>
-      <Nav />
     </Wrapper>
+    <Nav />
+    </>
   );
 };
 
 const Wrapper = styled.div`
-  padding-bottom: 48px;
+  padding-bottom: 56px;
+  margin-bottom: 56px;
 `;
 
 const ChatListItem = styled.div`

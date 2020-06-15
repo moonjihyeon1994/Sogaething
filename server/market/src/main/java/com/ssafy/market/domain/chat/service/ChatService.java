@@ -3,6 +3,7 @@ package com.ssafy.market.domain.chat.service;
 import com.ssafy.market.domain.chat.domain.ChatMessage;
 import com.ssafy.market.domain.chat.domain.ChatRoom;
 import com.ssafy.market.domain.chat.domain.MessageType;
+import com.ssafy.market.domain.chat.dto.RemitMessageDto;
 import com.ssafy.market.domain.chat.redis.RedisPublisher;
 import com.ssafy.market.domain.chat.repository.ChatMongoRepository;
 import com.ssafy.market.domain.chat.repository.ChatRoomMongoRepository;
@@ -43,7 +44,7 @@ public class ChatService {
         return topics.get(roomId);
     }
 
-    @CacheEvict(value = CacheKey.MESSAGE, key = "#chatMessage.roomId")
+//    @CacheEvict(value = CacheKey.MESSAGE, key = "#chatMessage.roomId")
     @Transactional
     public Boolean sendMessage(ChatMessage chatMessage) {
         ChannelTopic channelTopic = getTopic(chatMessage.getRoomId());
@@ -61,7 +62,22 @@ public class ChatService {
         }
     }
 
-    @Cacheable(value = CacheKey.MESSAGE, key = "#roomId", unless = "#result == null")
+//    @CacheEvict(value = CacheKey.MESSAGE, key = "#remitMessageDto.roomId")
+    @Transactional
+    public Boolean sendRemitMessage(RemitMessageDto remitMessageDto) {
+        ChannelTopic channelTopic = getTopic(remitMessageDto.getRoomId());
+
+        // WebSocket 에 발행된 메시지를 redis 로 발행한다.(publish)
+        redisPublisher.publish(channelTopic, remitMessageDto);
+        RemitMessageDto result = chatMongoRepository.insertRemitMessage(remitMessageDto);
+        if (result != null){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+//    @Cacheable(value = CacheKey.MESSAGE, key = "#roomId", unless = "#result == null")
     @Transactional(readOnly = true)
     public Map<String, Object> findChatMessagesByRoomId(Long roomId) {
 //        System.out.println("findChatMessagesByRoomId");
