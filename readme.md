@@ -18,6 +18,7 @@
 
 
 
+
 <br>
 
 <!-- ABOUT THE PROJECT -->
@@ -103,13 +104,15 @@ yarn dev
 * [Sketch](https://www.sketch.com/)
 * [Zeplin](https://zeplin.io/)
 * [Postman](https://www.postman.com/)
+* [Jira](https://www.atlassian.com/software/jira/)
+* [Mattermost](https://mattermost.com/)
+* [GitLab](https://about.gitlab.com/)
 
 Languege
 * [TypeScript](https://www.typescriptlang.org/)
 * [Java](https://java.com/ko/download/)
-* [GraphQl](https://graphql.org/)
 
-DBMS
+DB
 * [MySQL](https://www.mysql.com/)
 * [MongoDB](https://www.mongodb.com/)
 * [Redis](https://redis.io/)
@@ -117,13 +120,34 @@ DBMS
 Library
 * [React](https://ko.reactjs.org/)
 * [Mobx](https://mobx.js.org/)
+* [Next](https://nextjs.org/)
 * [JWT](https://jwt.io/)
 * [WebSocket](https://en.wikipedia.org/wiki/WebSocket/)
+* [Spring boot](https://spring.io/projects/spring-boot/)
+* [Spring security](https://spring.io/projects/spring-security/)
+
+ETC
+* [GraphQl](https://graphql.org/)
+* [RestfulApi]
+* [SSO]
 
 <br>
 
 
 <br>
+
+### DEMO
+
+(Only mobile)
+https://www.sogaething.com
+
+
+(실행 영상)
+https://youtu.be/vsm-t-vIsMw
+
+
+<br>
+
 <!-- CONTACT -->
 
 ## :busts_in_silhouette:  Contact
@@ -143,6 +167,9 @@ Library
 Project Link: [https://lab.ssafy.com/s02-final/s02p31a404](https://lab.ssafy.com/s02-final/s02p31a404)
 
 <br>
+
+
+
 
 <!-- ACKNOWLEDGEMENTS -->
 ## 참고문서 
