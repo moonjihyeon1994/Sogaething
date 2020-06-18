@@ -1,3 +1,4 @@
+import { IPostMetaOutput } from '~/generated/graphql';
 import autobind from 'autobind-decorator';
 import { action, autorun, observable, reaction, toJS } from 'mobx';
 import {
@@ -7,6 +8,7 @@ import {
 import { IFindUserHistoryByUserId } from './../components/CardList/index';
 import { IFindUserInfo } from './../components/MainUserCard/index';
 import { DataFetchLoading } from './type';
+import { ApolloError } from 'apollo-client';
 
 @autobind
 class CardStore {
@@ -37,6 +39,10 @@ class CardStore {
   };
   @observable MainHistoryLoading: boolean = false;
   @observable MainRecentCards: object = {};
+
+  @observable MainSearchCards: IPostMetaOutput[] = [];
+  @observable MainSearchLoading: boolean = false;
+  @observable MainSearchError: ApolloError | undefined = undefined;
 
   constructor(root: any, initialData?: CardStore) {
     if (initialData) {
@@ -70,6 +76,11 @@ class CardStore {
   @action
   setHistoryCards(data: IGetHistoryQuery) {
     this.MainHistoryCards = data;
+  }
+
+  @action 
+  setSearchCard(data: IPostMetaOutput[]){
+    this.MainSearchCards = data;
   }
 }
 
