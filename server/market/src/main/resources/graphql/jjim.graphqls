@@ -8,21 +8,21 @@ type Jjim{
 type JjimOutput{
     jjimId: Int
     postId: Int
-    title: String
-    category: String
-    imgPath: String
-    price: Int
+    userId: Int
     createdDate: String
     modifiedDate: String
 }
 
+type DeleteOutput{
+    state:String
+}
 input CreateJjimInput{
     postId : Int!
 }
 extend type Query {
-    findJjimByUserId(userId : Int): [JjimOutput]
+    findJjimByUserId: [PostMetaOutput]
 }
 extend type Mutation {
     createJjim(input : CreateJjimInput!) : Jjim
-    deleteJjim(jjimId: Int) : Int
+    deleteJjim(postId: Int) : Int
 }

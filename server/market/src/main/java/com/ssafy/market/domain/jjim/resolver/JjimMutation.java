@@ -25,16 +25,21 @@ public class JjimMutation implements GraphQLMutationResolver {
     private final PostRepository postRepository;
 
     @Transactional
-    public Jjim createJjim(CreateJjimInput input, DataFetchingEnvironment env){
+    public Jjim createJjim(CreateJjimInput input, DataFetchingEnvironment env) {
         Long userId = tokenProvider.getUserIdFromHeader(env);
         User user = userRepository.findByUserId(userId);
         Post post = postRepository.findByPostId(input.getPostId());
-        Jjim jjim = jjimRepository.save(new Jjim(null,user,post));
+        Jjim jjim = jjimRepository.save(new Jjim(null, user, post));
         return jjim;
     }
+
     @Transactional
-    public int deleteJjim(Long jjimId){
-        Jjim jjim = jjimRepository.findByJjimId(jjimId);
-        return jjimRepository.deleteByJjimId(jjimId);
+    public int deleteJjim(Long postId, DataFetchingEnvironment env) {
+        Long userId = tokenProvider.getUserIdFromHeader(env);
+        int result = jjimRepository.deleteByPostIdAndUserId(postId, userId);
+        if (result == 0) {
+            System.out.println("삭제 안됨");
+        }
+        return result;
     }
 }
