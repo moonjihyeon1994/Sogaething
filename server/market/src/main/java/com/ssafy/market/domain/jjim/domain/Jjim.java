@@ -11,6 +11,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @NoArgsConstructor
+@Table(name="jjim")
 public class Jjim extends BaseTimeEntity {
 
     @Id
@@ -22,9 +23,15 @@ public class Jjim extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(name = "user_id", insertable = false, updatable = false, nullable = false)
+    private Long userId;
+
     @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post;
+
+    @Column(name = "post_id", insertable = false, updatable = false, nullable = false)
+    private Long postId;
 
     public Jjim(Long jjimId, User user, Post post){
         this.jjimId = jjimId;
