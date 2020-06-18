@@ -8,10 +8,7 @@ type Jjim{
 type JjimOutput{
     jjimId: Int
     postId: Int
-    title: String
-    category: String
-    imgPath: String
-    price: Int
+    userId: Int
     createdDate: String
     modifiedDate: String
 }

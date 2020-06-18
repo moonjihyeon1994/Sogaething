@@ -33,6 +33,11 @@ public class Jjim extends BaseTimeEntity {
     @Column(name = "post_id", insertable = false, updatable = false, nullable = false)
     private Long postId;
 
+    public Jjim(User user, Post post) {
+        this.user = user;
+        this.post = post;
+    }
+
     public Jjim(Long jjimId, User user, Post post){
         this.jjimId = jjimId;
         this.user = user;
