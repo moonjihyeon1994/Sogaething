@@ -54,6 +54,25 @@ query getRecent {
   }
 }
 
+query getSearchByTitle($input: String!) {
+  searchThingsByTitle(title: $input){
+    postId
+    title
+    category
+    imgPath
+    price
+    hashtag
+    isBuy
+    viewCount
+    deal
+    dealState
+    saleDate
+    transaction
+    createdDate
+    modifiedDate
+  }
+}
+
 # query getSearchHashTag {
 #   searchThings(){
 
