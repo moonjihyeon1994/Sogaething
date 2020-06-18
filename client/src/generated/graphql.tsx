@@ -723,6 +723,36 @@ export type IGetRecentQuery = { __typename?: "Query" } & {
   >;
 };
 
+export type IGetSearchByTitleQueryVariables = {
+  input: Scalars["String"];
+};
+
+export type IGetSearchByTitleQuery = { __typename?: "Query" } & {
+  searchThingsByTitle: Maybe<
+    Array<
+      Maybe<
+        { __typename?: "PostMetaOutput" } & Pick<
+          IPostMetaOutput,
+          | "postId"
+          | "title"
+          | "category"
+          | "imgPath"
+          | "price"
+          | "hashtag"
+          | "isBuy"
+          | "viewCount"
+          | "deal"
+          | "dealState"
+          | "saleDate"
+          | "transaction"
+          | "createdDate"
+          | "modifiedDate"
+        >
+      >
+    >
+  >;
+};
+
 export type ICreateMatchingMutationVariables = {
   input: IMatchInput;
 };
@@ -1333,6 +1363,78 @@ export function useGetRecentQuery(
     GetRecentDocument,
     baseOptions
   );
+}
+export const GetSearchByTitleDocument = gql`
+  query getSearchByTitle($input: String!) {
+    searchThingsByTitle(title: $input) {
+      postId
+      title
+      category
+      imgPath
+      price
+      hashtag
+      isBuy
+      viewCount
+      deal
+      dealState
+      saleDate
+      transaction
+      createdDate
+      modifiedDate
+    }
+  }
+`;
+
+export const GetSearchByTitleComponent = (
+  props: Omit<
+    Omit<
+      ReactApollo.QueryProps<
+        IGetSearchByTitleQuery,
+        IGetSearchByTitleQueryVariables
+      >,
+      "query"
+    >,
+    "variables"
+  > & { variables: IGetSearchByTitleQueryVariables }
+) => (
+  <ReactApollo.Query<IGetSearchByTitleQuery, IGetSearchByTitleQueryVariables>
+    query={GetSearchByTitleDocument}
+    {...props}
+  />
+);
+
+export type IGetSearchByTitleProps<TChildProps = {}> = Partial<
+  ReactApollo.DataProps<IGetSearchByTitleQuery, IGetSearchByTitleQueryVariables>
+> &
+  TChildProps;
+export function withGetSearchByTitle<TProps, TChildProps = {}>(
+  operationOptions?: ReactApollo.OperationOption<
+    TProps,
+    IGetSearchByTitleQuery,
+    IGetSearchByTitleQueryVariables,
+    IGetSearchByTitleProps<TChildProps>
+  >
+) {
+  return ReactApollo.withQuery<
+    TProps,
+    IGetSearchByTitleQuery,
+    IGetSearchByTitleQueryVariables,
+    IGetSearchByTitleProps<TChildProps>
+  >(GetSearchByTitleDocument, {
+    alias: "withGetSearchByTitle",
+    ...operationOptions
+  });
+}
+
+export function useGetSearchByTitleQuery(
+  baseOptions?: ReactApolloHooks.QueryHookOptions<
+    IGetSearchByTitleQueryVariables
+  >
+) {
+  return ReactApolloHooks.useQuery<
+    IGetSearchByTitleQuery,
+    IGetSearchByTitleQueryVariables
+  >(GetSearchByTitleDocument, baseOptions);
 }
 export const CreateMatchingDocument = gql`
   mutation createMatching($input: MatchInput!) {

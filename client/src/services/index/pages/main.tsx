@@ -16,11 +16,11 @@ import Nav from '../components/Nav';
 import ProductCardList from '../components/ProductCardList';
 import SearchBar from '../components/SearchBar';
 import useStores from '../helpers/useStores';
+import { useGetSearchByTitleQuery } from '~/generated/graphql';
 
 const PageIndex: NextPage = (props) => {
   const { pageStore, authStore } = useStores();
-  const router = useRouter();
-  //   const getHistory = useGetHistoryQuery();
+  const router = useRouter(); 
 
   //   console.log('-------------------------------main--------------------------')
   //   console.log('-------------------------------main_end--------------------------')
